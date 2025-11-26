@@ -1,5 +1,6 @@
 package br.com.alura.adopet.api.service;
 
+import br.com.alura.adopet.api.dto.AbrigoDTO;
 import br.com.alura.adopet.api.dto.CadastrarAbrigoDTO;
 import br.com.alura.adopet.api.dto.CadastrarPetDTO;
 import br.com.alura.adopet.api.exception.ValidacaoException;
@@ -12,6 +13,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,8 +28,15 @@ public class AbrigoService {
     @Autowired
     private List<IValidationCadastrarAbrigo> validationsCadastrarAbrigo;
 
-    public List<Abrigo> listar() {
-        return repository.findAll();
+    public List<AbrigoDTO> listar() {
+        List<Abrigo> abrigos = repository.findAll();
+        List<AbrigoDTO> abrigosDTO = new ArrayList<>();
+        for (Abrigo abrigo : abrigos) {
+            AbrigoDTO abrigoDTO = new AbrigoDTO(abrigo.getId(), abrigo.getNome(), abrigo.getTelefone(), abrigo.getEmail(), abrigo.getPets());
+            abrigosDTO.add(abrigoDTO);
+        }
+
+        return abrigosDTO;
     }
 
     public void cadastrar(CadastrarAbrigoDTO dto) {

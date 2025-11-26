@@ -1,5 +1,6 @@
 package br.com.alura.adopet.api.controller;
 
+import br.com.alura.adopet.api.dto.AbrigoDTO;
 import br.com.alura.adopet.api.dto.CadastrarAbrigoDTO;
 import br.com.alura.adopet.api.dto.CadastrarPetDTO;
 import br.com.alura.adopet.api.exception.ValidacaoException;
@@ -24,9 +25,9 @@ public class AbrigoController {
     private AbrigoService service;
 
     @GetMapping
-    public ResponseEntity<List<Abrigo>> listar() {
+    public ResponseEntity<List<AbrigoDTO>> listar() {
         try {
-            List<Abrigo> abrigos = service.listar();
+            List<AbrigoDTO> abrigos = service.listar();
             return ResponseEntity.ok(abrigos);
 
         } catch (ValidacaoException exception) {
