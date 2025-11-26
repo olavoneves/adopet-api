@@ -3,6 +3,7 @@ package br.com.alura.adopet.api.service;
 import br.com.alura.adopet.api.dto.AbrigoDTO;
 import br.com.alura.adopet.api.dto.CadastrarAbrigoDTO;
 import br.com.alura.adopet.api.dto.CadastrarPetDTO;
+import br.com.alura.adopet.api.dto.PetDTO;
 import br.com.alura.adopet.api.exception.ValidacaoException;
 import br.com.alura.adopet.api.model.Abrigo;
 import br.com.alura.adopet.api.model.Pet;
@@ -45,17 +46,29 @@ public class AbrigoService {
         repository.save(abrigo);
     }
 
-    public List<Pet> listarPets(String idOuNome) {
+    public List<PetDTO> listarPets(String idOuNome) {
         try {
             Long id = Long.parseLong(idOuNome);
-            return repository.getReferenceById(id).getPets();
+            List<Pet> pets = repository.getReferenceById(id).getPets();
+            List<PetDTO> petsDTOS = new ArrayList<>();
+            for (Pet pet : pets) {
+                PetDTO petDTO = new PetDTO(pet.getId(), pet.getTipo(), pet.getNome(), pet.getRaca(), pet.getIdade(), pet.getCor(), pet.getPeso(), pet.getAdotado(), pet.getAbrigo(), pet.getAdocao());
+                petsDTOS.add(petDTO);
+            }
+            return petsDTOS;
 
         } catch (EntityNotFoundException enfe) {
             throw new ValidacaoException(enfe.getMessage());
 
         } catch (NumberFormatException e) {
             try {
-                return repository.findByNome(idOuNome).getPets();
+                List<Pet> pets = repository.findByNome(idOuNome).getPets();
+                List<PetDTO> petsDTOS = new ArrayList<>();
+                for (Pet pet : pets) {
+                    PetDTO petDTO = new PetDTO(pet.getId(), pet.getTipo(), pet.getNome(), pet.getRaca(), pet.getIdade(), pet.getCor(), pet.getPeso(), pet.getAdotado(), pet.getAbrigo(), pet.getAdocao());
+                    petsDTOS.add(petDTO);
+                }
+                return petsDTOS;
 
             } catch (EntityNotFoundException enfe) {
                 throw new ValidacaoException(enfe.getMessage());
