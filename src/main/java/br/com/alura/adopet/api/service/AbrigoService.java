@@ -32,9 +32,7 @@ public class AbrigoService {
 
     public void cadastrar(CadastrarAbrigoDTO dto) {
         validationsCadastrarAbrigo.forEach(validation -> validation.validar(dto));
-
         Abrigo abrigo = new Abrigo(dto.nome(), dto.telefone(), dto.email());
-
         repository.save(abrigo);
     }
 
