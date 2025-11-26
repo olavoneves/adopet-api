@@ -16,22 +16,16 @@ public class Pet {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @NotNull
     private TipoPet tipo;
 
-    @NotBlank
     private String nome;
 
-    @NotBlank
     private String raca;
 
-    @NotNull
     private Integer idade;
 
-    @NotBlank
     private String cor;
 
-    @NotNull
     private Float peso;
 
     private Boolean adotado;
@@ -43,6 +37,20 @@ public class Pet {
     @OneToOne(mappedBy = "pet")
     @JsonBackReference("adocao_pets")
     private Adocao adocao;
+
+    public Pet() {
+    }
+
+    public Pet(TipoPet tipo, String nome, String raca, Integer idade, String cor, Float peso, Abrigo abrigo) {
+        this.tipo = tipo;
+        this.nome = nome;
+        this.raca = raca;
+        this.idade = idade;
+        this.cor = cor;
+        this.peso = peso;
+        this.adotado = false;
+        this.abrigo = abrigo;
+    }
 
     @Override
     public boolean equals(Object o) {

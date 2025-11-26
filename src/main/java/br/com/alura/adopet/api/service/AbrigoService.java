@@ -1,14 +1,15 @@
 package br.com.alura.adopet.api.service;
 
 import br.com.alura.adopet.api.dto.CadastrarAbrigoDTO;
+import br.com.alura.adopet.api.dto.CadastrarPetDTO;
 import br.com.alura.adopet.api.exception.ValidacaoException;
 import br.com.alura.adopet.api.model.Abrigo;
 import br.com.alura.adopet.api.model.Pet;
 import br.com.alura.adopet.api.repository.AbrigoRepository;
+import br.com.alura.adopet.api.repository.PetRepository;
 import br.com.alura.adopet.api.validations.IValidationCadastrarAbrigo;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,9 @@ public class AbrigoService {
 
     @Autowired
     private AbrigoRepository repository;
+
+    @Autowired
+    private PetRepository petRepository;
 
     @Autowired
     private List<IValidationCadastrarAbrigo> validationsCadastrarAbrigo;
@@ -52,31 +56,36 @@ public class AbrigoService {
         }
     }
 
-    public void cadastrarPet(String idOuNome, Pet pet) {
+    public void cadastrarPet(String idOuNome, CadastrarPetDTO dto) {
+        Abrigo abrigo;
+
+        boolean isNumero = true;
+        Long id = null;
+
         try {
-            Long id = Long.parseLong(idOuNome);
-            Abrigo abrigo = repository.getReferenceById(id);
-            pet.setAbrigo(abrigo);
-            pet.setAdotado(false);
-            abrigo.getPets().add(pet);
+            id = Long.parseLong(idOuNome);
+        } catch (NumberFormatException e) {
+            isNumero = false;
+        }
 
-            repository.save(abrigo);
-
-        } catch (EntityNotFoundException enfe) {
-            throw new ValidacaoException(enfe.getMessage());
-
-        } catch (NumberFormatException nfe) {
+        if (isNumero) {
             try {
-                Abrigo abrigo = repository.findByNome(idOuNome);
-                pet.setAbrigo(abrigo);
-                pet.setAdotado(false);
-                abrigo.getPets().add(pet);
-
-                repository.save(abrigo);
-
-            } catch (EntityNotFoundException enfe) {
-                throw new ValidacaoException(enfe.getMessage());
+                abrigo = repository.getReferenceById(id);
+            } catch (EntityNotFoundException e) {
+                throw new ValidacaoException(e.getMessage());
+            }
+        } else {
+            try {
+                abrigo = repository.findByNome(idOuNome);
+            } catch (EntityNotFoundException e) {
+                throw new ValidacaoException(e.getMessage());
             }
         }
+
+        Pet pet = new Pet(dto.tipo(), dto.nome(), dto.raca(), dto.idade(), dto.cor(), dto.peso(), abrigo);
+        abrigo.getPets().add(pet);
+
+        petRepository.save(pet);
+        repository.save(abrigo);
     }
 }
