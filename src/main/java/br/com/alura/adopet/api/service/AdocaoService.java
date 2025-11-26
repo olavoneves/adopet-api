@@ -5,7 +5,6 @@ import br.com.alura.adopet.api.dto.ReprovacaoAdocaoDTO;
 import br.com.alura.adopet.api.dto.SolicitacaoAdocaoDTO;
 import br.com.alura.adopet.api.model.Adocao;
 import br.com.alura.adopet.api.model.Pet;
-import br.com.alura.adopet.api.model.StatusAdocao;
 import br.com.alura.adopet.api.model.Tutor;
 import br.com.alura.adopet.api.repository.AdocaoRepository;
 import br.com.alura.adopet.api.repository.PetRepository;
@@ -14,7 +13,6 @@ import br.com.alura.adopet.api.validations.IValidationSolicitacaoAdocao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -42,12 +40,8 @@ public class AdocaoService {
 
         validations.forEach(validation -> validation.validar(dto));
 
-        Adocao adocao = new Adocao();
-        adocao.setData(LocalDateTime.now());
-        adocao.setTutor(tutor);
-        adocao.setPet(pet);
-        adocao.setMotivo(dto.motivo());
-        adocao.setStatus(StatusAdocao.AGUARDANDO_AVALIACAO);
+        Adocao adocao = new Adocao(tutor, pet, dto.motivo());
+
         repository.save(adocao);
 
         String to = adocao.getPet().getAbrigo().getEmail();
@@ -58,7 +52,7 @@ public class AdocaoService {
 
     public void aprovar(AprovacaoAdocaoDTO dto) {
         Adocao adocao = repository.getReferenceById(dto.idAdocao());
-        adocao.setStatus(StatusAdocao.APROVADO);
+        adocao.aprovarAdocao();
 
         String to = adocao.getTutor().getEmail();
         String subject = "Adoção aprovada";
@@ -68,8 +62,7 @@ public class AdocaoService {
 
     public void reprovar(ReprovacaoAdocaoDTO dto) {
         Adocao adocao = repository.getReferenceById(dto.idAdocao());
-        adocao.setJustificativaStatus(dto.justificativa());
-        adocao.setStatus(StatusAdocao.REPROVADO);
+        adocao.reprovarAdocao(dto.justificativa());
 
         String to = adocao.getTutor().getEmail();
         String subject = "Adoção reprovada";
