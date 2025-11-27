@@ -6,7 +6,6 @@ import br.com.alura.adopet.api.dto.CadastrarPetDTO;
 import br.com.alura.adopet.api.dto.PetDTO;
 import br.com.alura.adopet.api.exception.ValidacaoException;
 import br.com.alura.adopet.api.service.AbrigoService;
-import br.com.alura.adopet.api.service.PetService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +20,6 @@ public class AbrigoController {
 
     @Autowired
     private AbrigoService service;
-
-    @Autowired
-    private PetService petService;
 
     @GetMapping
     public ResponseEntity<List<AbrigoDTO>> listar() {

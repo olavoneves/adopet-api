@@ -21,13 +21,13 @@ public class TutorService {
 
     public void cadastrar(CadastrarTutorDTO dto) {
         validationsCadastrarTutor.forEach(validation -> validation.validar(dto));
-        Tutor tutor = new Tutor(dto.nome(), dto.telefone(), dto.email());
+        Tutor tutor = new Tutor(dto);
         repository.save(tutor);
     }
 
     public void atualizar(AtualizarTutorDTO dto) {
         Tutor tutor = repository.getReferenceById(dto.idTutor());
-        tutor.atualizar(dto.adocoes());
+        tutor.atualizar(dto);
         repository.save(tutor);
     }
 }
