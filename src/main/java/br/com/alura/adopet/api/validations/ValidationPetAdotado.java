@@ -13,7 +13,7 @@ public class ValidationPetAdotado implements IValidationSolicitacaoAdocao {
     private PetRepository petRepository;
 
     public void validar(SolicitacaoAdocaoDTO dto) {
-        boolean existsPetAdotado = petRepository.existsByIdAndAdotado(dto.idPet(), true);
+        boolean existsPetAdotado = petRepository.existsByIdAndAdotadoTrue(dto.idPet());
 
         if (existsPetAdotado) {
             throw new ValidacaoException("Pet já foi adotado!");
