@@ -14,7 +14,6 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,14 +29,11 @@ public class AbrigoService {
     private List<IValidationCadastrarAbrigo> validationsCadastrarAbrigo;
 
     public List<AbrigoDTO> listar() {
-        List<Abrigo> abrigos = repository.findAll();
-        List<AbrigoDTO> abrigosDTO = new ArrayList<>();
-        for (Abrigo abrigo : abrigos) {
-            AbrigoDTO abrigoDTO = new AbrigoDTO(abrigo.getId(), abrigo.getNome(), abrigo.getTelefone(), abrigo.getEmail(), abrigo.getPets());
-            abrigosDTO.add(abrigoDTO);
-        }
-
-        return abrigosDTO;
+        return repository
+                .findAll()
+                .stream()
+                .map(abrigo -> new AbrigoDTO(abrigo.getId(), abrigo.getNome(), abrigo.getTelefone(), abrigo.getEmail(), abrigo.getPets()))
+                .toList();
     }
 
     public void cadastrar(CadastrarAbrigoDTO dto) {
@@ -49,26 +45,22 @@ public class AbrigoService {
     public List<PetDTO> listarPets(String idOuNome) {
         try {
             Long id = Long.parseLong(idOuNome);
-            List<Pet> pets = repository.getReferenceById(id).getPets();
-            List<PetDTO> petsDTOS = new ArrayList<>();
-            for (Pet pet : pets) {
-                PetDTO petDTO = new PetDTO(pet.getId(), pet.getTipo(), pet.getNome(), pet.getRaca(), pet.getIdade(), pet.getCor(), pet.getPeso(), pet.getAdotado(), pet.getAbrigo(), pet.getAdocao());
-                petsDTOS.add(petDTO);
-            }
-            return petsDTOS;
+            return repository
+                    .getReferenceById(id).getPets()
+                    .stream()
+                    .map(pet -> new PetDTO(pet.getId(), pet.getTipo(), pet.getNome(), pet.getRaca(), pet.getIdade(), pet.getCor(), pet.getPeso(), pet.getAdotado(), pet.getAbrigo(), pet.getAdocao()))
+                    .toList();
 
         } catch (EntityNotFoundException enfe) {
             throw new ValidacaoException(enfe.getMessage());
 
         } catch (NumberFormatException e) {
             try {
-                List<Pet> pets = repository.findByNome(idOuNome).getPets();
-                List<PetDTO> petsDTOS = new ArrayList<>();
-                for (Pet pet : pets) {
-                    PetDTO petDTO = new PetDTO(pet.getId(), pet.getTipo(), pet.getNome(), pet.getRaca(), pet.getIdade(), pet.getCor(), pet.getPeso(), pet.getAdotado(), pet.getAbrigo(), pet.getAdocao());
-                    petsDTOS.add(petDTO);
-                }
-                return petsDTOS;
+                return repository
+                        .findByNome(idOuNome).getPets()
+                        .stream()
+                        .map(pet -> new PetDTO(pet.getId(), pet.getTipo(), pet.getNome(), pet.getRaca(), pet.getIdade(), pet.getCor(), pet.getPeso(), pet.getAdotado(), pet.getAbrigo(), pet.getAdocao()))
+                        .toList();
 
             } catch (EntityNotFoundException enfe) {
                 throw new ValidacaoException(enfe.getMessage());
