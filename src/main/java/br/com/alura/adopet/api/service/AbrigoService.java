@@ -38,7 +38,7 @@ public class AbrigoService {
 
     public void cadastrar(CadastrarAbrigoDTO dto) {
         validationsCadastrarAbrigo.forEach(validation -> validation.validar(dto));
-        Abrigo abrigo = new Abrigo(dto.nome(), dto.telefone(), dto.email());
+        Abrigo abrigo = new Abrigo(dto);
         repository.save(abrigo);
     }
 
@@ -70,6 +70,7 @@ public class AbrigoService {
 
     public void cadastrarPet(String idOuNome, CadastrarPetDTO dto) {
         Abrigo abrigo;
+        Pet pet;
 
         boolean isNumero = true;
         Long id = null;
@@ -83,19 +84,22 @@ public class AbrigoService {
         if (isNumero) {
             try {
                 abrigo = repository.getReferenceById(id);
+                pet = new Pet(dto, abrigo);
+                abrigo.getPets().add(pet);
+
             } catch (EntityNotFoundException e) {
                 throw new ValidacaoException(e.getMessage());
             }
         } else {
             try {
                 abrigo = repository.findByNome(idOuNome);
+                pet = new Pet(dto, abrigo);
+                abrigo.getPets().add(pet);
+
             } catch (EntityNotFoundException e) {
                 throw new ValidacaoException(e.getMessage());
             }
         }
-
-        Pet pet = new Pet(dto.tipo(), dto.nome(), dto.raca(), dto.idade(), dto.cor(), dto.peso(), abrigo);
-        abrigo.getPets().add(pet);
 
         petRepository.save(pet);
         repository.save(abrigo);

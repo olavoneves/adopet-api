@@ -1,6 +1,6 @@
 package br.com.alura.adopet.api.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import br.com.alura.adopet.api.dto.CadastrarPetDTO;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -37,13 +37,13 @@ public class Pet {
     public Pet() {
     }
 
-    public Pet(TipoPet tipo, String nome, String raca, Integer idade, String cor, Float peso, Abrigo abrigo) {
-        this.tipo = tipo;
-        this.nome = nome;
-        this.raca = raca;
-        this.idade = idade;
-        this.cor = cor;
-        this.peso = peso;
+    public Pet(CadastrarPetDTO dto, Abrigo abrigo) {
+        this.tipo = dto.tipo();
+        this.nome = dto.nome();
+        this.raca = dto.raca();
+        this.idade = dto.idade();
+        this.cor = dto.cor();
+        this.peso = dto.peso();
         this.adotado = false;
         this.abrigo = abrigo;
     }
