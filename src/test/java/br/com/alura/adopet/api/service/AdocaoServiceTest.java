@@ -109,15 +109,11 @@ class AdocaoServiceTest {
     @Test
     @DisplayName("Deveria enviar email de adoção solicitada")
     void validarSolicitacaoCenario03() {
-
-        // ARRANGE
-        this.dto = new SolicitacaoAdocaoDTO(10l, 20l, "Motivo Qualquer");
-        given(petRepository.getReferenceById(dto.idPet())).willReturn(pet);
-        given(tutorRepository.getReferenceById(dto.idTutor())).willReturn(tutor);
-        given(pet.getAbrigo()).willReturn(abrigo);
+        String to = "";
+        String subject = "";
+        String text = "";
 
         // ACT
-        adocaoService.solicitar(dto);
 
         // ASSERT
         then(mailService).should().sendMail(to, subject, text);
