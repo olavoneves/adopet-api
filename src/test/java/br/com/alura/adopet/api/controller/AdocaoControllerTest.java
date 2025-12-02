@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -67,4 +68,92 @@ class AdocaoControllerTest {
         Assertions.assertEquals(400, response.getStatus());
     }
 
+    @Test
+    @DisplayName("Deveria retornar código 200 caso aprovação de certo")
+    void validarAprovacaoCenario01() throws Exception {
+
+        // ARRANGE
+        String json = """
+                {
+                    "idAdocao": 1
+                }
+                """;
+
+        // ACT
+        var response = mockMvc.perform(
+                put("/adocoes/aprovar")
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse();
+
+        // ASSERT
+        Assertions.assertEquals(200, response.getStatus());
+
+    }
+
+    @Test
+    @DisplayName("Deveria retornar código 400 caso aprovação de errado")
+    void validarAprovacaoCenario02() throws Exception {
+
+        // ARRANGE
+        String json = """
+                {}
+                """;
+
+        // ACT
+        var response = mockMvc.perform(
+                put("/adocoes/aprovar")
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse();
+
+        // ASSERT
+        Assertions.assertEquals(400, response.getStatus());
+
+    }
+
+    @Test
+    @DisplayName("Deveria retornar código 200 caso reprovação de certo")
+    void validarReprovacaoCenario01() throws Exception {
+
+        // ARRANGE
+        String json = """
+                {
+                    "idAdocao": 1,
+                    "justificativa": "Qualquer justificativa"
+                }
+                """;
+
+        // ACT
+        var response = mockMvc.perform(
+                put("/adocoes/reprovar")
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse();
+
+        // ASSERT
+        Assertions.assertEquals(200, response.getStatus());
+
+    }
+
+    @Test
+    @DisplayName("Deveria retornar código 400 caso reprovação de errado")
+    void validarReprovacaoCenario02() throws Exception {
+
+        // ARRANGE
+        String json = """
+                {}
+                """;
+
+        // ACT
+        var response = mockMvc.perform(
+                put("/adocoes/reprovar")
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse();
+
+        // ASSERT
+        Assertions.assertEquals(400, response.getStatus());
+
+    }
 }
