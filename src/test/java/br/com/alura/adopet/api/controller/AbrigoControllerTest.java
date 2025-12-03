@@ -1,6 +1,8 @@
 package br.com.alura.adopet.api.controller;
 
 import br.com.alura.adopet.api.dto.CadastrarAbrigoDTO;
+import br.com.alura.adopet.api.dto.CadastrarPetDTO;
+import br.com.alura.adopet.api.model.TipoPet;
 import br.com.alura.adopet.api.service.AbrigoService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,6 +32,9 @@ class AbrigoControllerTest {
 
     @Autowired
     private JacksonTester<CadastrarAbrigoDTO> cadastrarAbrigoJsonDTO;
+
+    @Autowired
+    private JacksonTester<CadastrarPetDTO> cadastrarPetJsonDTO;
 
     @Test
     @DisplayName("Deveria retornar status 200 caso liste abrigos")
@@ -76,6 +81,58 @@ class AbrigoControllerTest {
         var response = mvc.perform(
                 post("/abrigos")
                         .content(cadastrarAbrigoJsonDTO.write(dto).getJson())
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse();
+
+        // ASSERT
+        assertEquals(400, response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Deveria retornar status 200 caso liste pets")
+    void listarPetsCenario01() throws Exception{
+
+        // ARRANGE
+
+        // ACT
+        var response = mvc.perform(
+                get("/abrigos/{idOuNome}/pets", "2")
+        ).andReturn().getResponse();
+
+        // ASSERT
+        assertEquals(200, response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Deveria retornar status 200 caso cadastre pet")
+    void cadastrarPetsCenario01() throws Exception{
+
+        // ARRANGE
+        CadastrarPetDTO dto = new CadastrarPetDTO(TipoPet.CACHORRO, "Pipoca", "Vira-lata", 6, "branco", 18F);
+
+        // ACT
+        var response = mvc.perform(
+                post("/abrigos/{idOuNome}/pets", "2")
+                        .content(cadastrarPetJsonDTO.write(dto).getJson())
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse();
+
+        // ASSERT
+        assertEquals(200, response.getStatus());
+        assertEquals("Pet Cadastrado com Sucesso", response.getContentAsString());
+    }
+
+    @Test
+    @DisplayName("Deveria retornar status 400 caso não cadastre pet")
+    void cadastrarPetsCenario02() throws Exception{
+
+        // ARRANGE
+        CadastrarPetDTO dto = new CadastrarPetDTO(null, "", "", null, "", null);
+
+        // ACT
+        var response = mvc.perform(
+                post("/abrigos/{idOuNome}/pets", "2")
+                        .content(cadastrarPetJsonDTO.write(dto).getJson())
                         .contentType(MediaType.APPLICATION_JSON)
         ).andReturn().getResponse();
 
