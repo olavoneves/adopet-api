@@ -22,5 +22,9 @@ public class ValidationMaximoTutorAdocoes implements IValidationSolicitacaoAdoca
         if (adocoes.size() == 5) {
             throw new ValidacaoException("Tutor chegou ao limite máximo de 5 adoções!");
         }
+
+        if (adocoes.size() > 5) {
+            throw new ValidacaoException("Tutor excedeu o limite de adoções");
+        }
     }
 }
