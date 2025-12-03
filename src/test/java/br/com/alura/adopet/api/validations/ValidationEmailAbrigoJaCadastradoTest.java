@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ValidationEmailAbrigoJaCadastradoTest {
@@ -30,7 +31,9 @@ class ValidationEmailAbrigoJaCadastradoTest {
     void validarCenario01() {
 
         // ARRANGE
-        given(abrigoRepository.existsByEmail(dto.email())).willReturn(true);
+        String email = "abrigo@gmail.com";
+        when(dto.email()).thenReturn(email);
+        given(abrigoRepository.existsByEmail(email)).willReturn(true);
 
         // ASSERT + ACT
         assertThrows(ValidacaoException.class, () -> validationEmailCadastrado.validar(dto));
@@ -41,7 +44,9 @@ class ValidationEmailAbrigoJaCadastradoTest {
     void validarCenario02() {
 
         // ARRANGE
-        given(abrigoRepository.existsByEmail(dto.email())).willReturn(false);
+        String email = "abrigo@gmail.com";
+        when(dto.email()).thenReturn(email);
+        given(abrigoRepository.existsByEmail(email)).willReturn(false);
 
         // ASSERT + ACT
         assertDoesNotThrow(() -> validationEmailCadastrado.validar(dto));

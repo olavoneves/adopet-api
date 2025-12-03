@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ValidationNomeAbrigoJaCadastradoTest {
@@ -30,7 +31,9 @@ class ValidationNomeAbrigoJaCadastradoTest {
     void validarCenario01() {
 
         // ARRANGE
-        given(abrigoRepository.existsByNome(dto.nome())).willReturn(true);
+        String nome = "Abrigo North";
+        when(dto.nome()).thenReturn(nome);
+        given(abrigoRepository.existsByNome(nome)).willReturn(true);
 
         // ASSERT + ACT
         assertThrows(ValidacaoException.class, () -> validationNomeCadastrado.validar(dto));
@@ -41,7 +44,9 @@ class ValidationNomeAbrigoJaCadastradoTest {
     void validarCenario02() {
 
         // ARRANGE
-        given(abrigoRepository.existsByNome(dto.nome())).willReturn(false);
+        String nome = "Abrigo North";
+        when(dto.nome()).thenReturn(nome);
+        given(abrigoRepository.existsByNome(nome)).willReturn(false);
 
         // ASSERT + ACT
         assertDoesNotThrow(() -> validationNomeCadastrado.validar(dto));

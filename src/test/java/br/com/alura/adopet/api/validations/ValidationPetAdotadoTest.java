@@ -10,9 +10,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ValidationPetAdotadoTest {
@@ -27,22 +27,27 @@ class ValidationPetAdotadoTest {
     private SolicitacaoAdocaoDTO dto;
 
     @Test
-    @DisplayName("Deveria permitir a solicitação de adoção do pet")
+    @DisplayName("Deveria retornar exception caso pet já tenha sido adotado")
     void validarCenario01() {
 
         // ARRANGE
-        given(petRepository.existsByIdAndAdotadoTrue(dto.idPet())).willReturn(false);
+        Long idPet = 1L;
+        when(dto.idPet()).thenReturn(idPet);
+        given(petRepository.existsByIdAndAdotadoTrue(idPet)).willReturn(true);
+
 
         // ASSERT + ACT
-        assertDoesNotThrow(() -> validation.validar(dto));
+        assertThrows(ValidacaoException.class, () -> validation.validar(dto));
     }
 
     @Test
-    @DisplayName("Não deveria permitir a solicitação de adoção do pet")
+    @DisplayName("Deveria retornar exception caso pet não exista")
     void validarCenario02() {
 
         // ARRANGE
-        given(petRepository.existsByIdAndAdotadoTrue(dto.idPet())).willReturn(true);
+        Long idPet = 1L;
+        when(dto.idPet()).thenReturn(idPet);
+        given(petRepository.existsById(idPet)).willReturn(false);
 
 
         // ASSERT + ACT

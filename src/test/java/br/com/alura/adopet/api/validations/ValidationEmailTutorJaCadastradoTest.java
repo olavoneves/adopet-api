@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ValidationEmailTutorJaCadastradoTest {
@@ -29,7 +30,9 @@ class ValidationEmailTutorJaCadastradoTest {
     @DisplayName("Deveria retornar exception caso email exista")
     void validarCenario01() {
 
-        given(tutorRepository.existsByEmail(dto.email())).willReturn(true);
+        String email = "tutor@gmail.com";
+        when(dto.email()).thenReturn(email);
+        given(tutorRepository.existsByEmail(email)).willReturn(true);
 
         assertThrows(ValidacaoException.class, () -> validationEmailCadastrado.validar(dto));
 
@@ -39,7 +42,9 @@ class ValidationEmailTutorJaCadastradoTest {
     @DisplayName("Não deveria retornar exception caso email não exista")
     void validarCenario02() {
 
-        given(tutorRepository.existsByEmail(dto.email())).willReturn(false);
+        String email = "tutor@gmail.com";
+        when(dto.email()).thenReturn(email);
+        given(tutorRepository.existsByEmail(email)).willReturn(false);
 
         assertDoesNotThrow(() -> validationEmailCadastrado.validar(dto));
 

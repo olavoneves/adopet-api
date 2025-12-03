@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ValidationTelefoneTutorJaCadastradoTest {
@@ -29,7 +30,9 @@ class ValidationTelefoneTutorJaCadastradoTest {
     @DisplayName("Deveria retornar exception caso telefone exista")
     void validarCenario01() {
 
-        given(tutorRepository.existsByTelefone(dto.telefone())).willReturn(true);
+        String telefone = "11966674354";
+        when(dto.telefone()).thenReturn(telefone);
+        given(tutorRepository.existsByTelefone(telefone)).willReturn(true);
 
         assertThrows(ValidacaoException.class, () -> validationTelefoneCadastrado.validar(dto));
 
@@ -39,7 +42,9 @@ class ValidationTelefoneTutorJaCadastradoTest {
     @DisplayName("Não deveria retornar exception caso telefone não exista")
     void validarCenario02() {
 
-        given(tutorRepository.existsByTelefone(dto.telefone())).willReturn(false);
+        String telefone = "11966674354";
+        when(dto.telefone()).thenReturn(telefone);
+        given(tutorRepository.existsByTelefone(telefone)).willReturn(false);
 
         assertDoesNotThrow(() -> validationTelefoneCadastrado.validar(dto));
 
