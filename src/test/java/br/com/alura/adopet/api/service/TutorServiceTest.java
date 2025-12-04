@@ -98,6 +98,7 @@ class TutorServiceTest {
         tutorService.atualizar(atualizarTutorDTO);
 
         // ASSERT
+        then(tutor).should().atualizar(atualizarTutorDTO);
         then(tutorRepository).should().save(tutorCaptor.capture());
     }
 
