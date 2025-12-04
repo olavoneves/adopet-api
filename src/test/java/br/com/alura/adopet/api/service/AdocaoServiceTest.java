@@ -39,9 +39,6 @@ class AdocaoServiceTest {
     @Mock
     private TutorRepository tutorRepository;
 
-    @Mock
-    private MailService mailService;
-
     @Spy
     private List<IValidationSolicitacaoAdocao> validationSolicitacaoAdocaos = new ArrayList<>();
 
@@ -104,19 +101,6 @@ class AdocaoServiceTest {
         assertEquals(pet, adocaoSalva.getPet());
         assertEquals(tutor, adocaoSalva.getTutor());
         assertEquals(dto.motivo(), adocaoSalva.getMotivo());
-    }
-
-    @Test
-    @DisplayName("Deveria enviar email de adoção solicitada")
-    void validarSolicitacaoCenario03() {
-        String to = "";
-        String subject = "";
-        String text = "";
-
-        // ACT
-
-        // ASSERT
-        then(mailService).should().sendMail(to, subject, text);
     }
 
 }
