@@ -39,6 +39,9 @@ class AdocaoServiceTest {
     @Mock
     private TutorRepository tutorRepository;
 
+    @Mock
+    private MailService mailService;
+
     @Spy
     private List<IValidationSolicitacaoAdocao> validationSolicitacaoAdocaos = new ArrayList<>();
 
@@ -67,10 +70,12 @@ class AdocaoServiceTest {
     void validarSolicitacaoCenario01() {
 
         // ARRANGE
-        this.dto = new SolicitacaoAdocaoDTO(10l, 20l, "Motivo Qualquer");
+        this.dto = new SolicitacaoAdocaoDTO(10L, 20L, "Motivo Qualquer");
+
         given(petRepository.getReferenceById(dto.idPet())).willReturn(pet);
         given(tutorRepository.getReferenceById(dto.idTutor())).willReturn(tutor);
         given(pet.getAbrigo()).willReturn(abrigo);
+
         validationSolicitacaoAdocaos.add(validador01);
         validationSolicitacaoAdocaos.add(validador02);
 
@@ -87,7 +92,8 @@ class AdocaoServiceTest {
     void validarSolicitacaoCenario02() {
 
         // ARRANGE
-        this.dto = new SolicitacaoAdocaoDTO(10l, 20l, "Motivo Qualquer");
+        this.dto = new SolicitacaoAdocaoDTO(10L, 20L, "Motivo Qualquer");
+
         given(petRepository.getReferenceById(dto.idPet())).willReturn(pet);
         given(tutorRepository.getReferenceById(dto.idTutor())).willReturn(tutor);
         given(pet.getAbrigo()).willReturn(abrigo);
